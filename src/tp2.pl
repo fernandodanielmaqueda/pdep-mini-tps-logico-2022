@@ -2,11 +2,19 @@
 % Predicados a desarrollar
 % --------------------------------
 
-incompatibles(???,???).
+incompatibles(Tipo1,Tipo2):-
+        tipo(_, Tipo1),
+        tipo(_, Tipo2),
+        Tipo1 \= Tipo2,
+        forall(tipo(Especie, Tipo1),not((tipo(Especie, Tipo2)))).
 
-ultimaEvolucion(???).
+ultimaEvolucion(Especie):-
+        evolucion(_, Especie),
+        not((evolucion(Especie, _))).
 
-predecible(???).
+predecible(Especie):-
+        tipo(Especie, Tipo),
+        forall(puedeEvolucionar(Especie, Evolucion),tipo(Evolucion, Tipo)).
 
 % --------------------------------
 % Código inicial - NO TOCAR
