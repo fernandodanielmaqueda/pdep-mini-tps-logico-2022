@@ -2,11 +2,47 @@
 % Predicados a desarrollar
 % --------------------------------
 
-lecturaIntensa(???).
+lecturaIntensa(libro(_, _, CantidadDePaginas)):-
+  CantidadDePaginas >= 500.
+lecturaIntensa(libro(_, paidos, _)).
+lecturaIntensa(paper(_, CantidadDePaginas, CantidadDeVisitas)):-
+  (CantidadDePaginas - CantidadDeVisitas) > 100.
+lecturaIntensa(saga(_, CantidadDeLibros)):-
+  CantidadDeLibros > 3.
 
-lectorCasual(???).
+lectorCasual(Persona):-
+  leyo(Persona, _),
+  forall(leyo(Persona, MaterialDeLectura), not(lecturaIntensa(MaterialDeLectura))).
 
-lecturaMasLarga(???, ???).
+lecturaMasLarga(Persona, MaterialDeLectura):-
+  leyo(Persona, _),
+  leyo(_, MaterialDeLectura),
+  leyo(Persona, MaterialDeLectura),
+  forall((leyo(Persona, OtroMaterialDeLectura), MaterialDeLectura \= OtroMaterialDeLectura), esMasLarga(MaterialDeLectura, OtroMaterialDeLectura)).
+
+esMasLarga(saga(_, CantidadDeLibros1), saga(_, CantidadDeLibros2)):-
+  CantidadDeLibros1 > CantidadDeLibros2.
+esMasLarga(saga(_, _), libro(_, _, _)).
+esMasLarga(saga(_, _), paper(_, _, _)).
+esMasLarga(MaterialDeLectura1, MaterialDeLectura2):-
+  cantidadDePaginas(MaterialDeLectura1, Cantidad1),
+  cantidadDePaginas(MaterialDeLectura2, Cantidad2),
+  Cantidad1 > Cantidad2.
+esMasLarga(MaterialDeLectura, haiku(_)):-
+  materialDeLectura(MaterialDeLectura),
+  not(esHaiku(MaterialDeLectura)).
+
+materialDeLectura(haiku(_)).
+materialDeLectura(libro(_, _, _)).
+materialDeLectura(paper(_, _, _)).
+materialDeLectura(saga(_, _)).
+
+cantidadDePaginas(libro(_, _, CantidadDePaginas), Cantidad):-
+  Cantidad = CantidadDePaginas.
+cantidadDePaginas(paper(_, CantidadDePaginas, _), Cantidad):-
+  Cantidad = CantidadDePaginas.
+
+esHaiku(haiku(_)).
 
 % --------------------------------
 % Código inicial - NO TOCAR
